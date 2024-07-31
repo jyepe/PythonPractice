@@ -16,3 +16,5 @@ with open('OlympicMedals_2020.csv', 'r', encoding='utf-8', newline='') as file:
             'total': total
         }
         print(row)
+
+print(country_stats)
