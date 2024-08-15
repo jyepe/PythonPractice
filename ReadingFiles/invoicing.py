@@ -1,4 +1,5 @@
 import datetime
+import csv
 from os import SEEK_SET
 from typing import TextIO
 
@@ -56,29 +57,41 @@ def record_invoice(invoice_file: TextIO,
     :param company: The name of the company being invoiced.
     :param amount: The amount of the invoice.
     """
+    reader = csv.reader(invoice_file, delimiter='\t')
+    # get the last item in the file
+    last_invoice = list(reader)[-1]
+    invoive_number = last_invoice[0]
+    next_number = next_invoice_number(invoive_number)
+    
+    with open('invoices.csv', 'a', encoding='utf-8', newline='') as file:
+        writer = csv.writer(file, delimiter='\t')
+        writer.writerow([next_number, company, amount])
+    
 
 
 # Test code:
-current_year = get_year()
-test_data = [
-    ('2019-0005', (2019, 5), f'{current_year}-0001'),
-    (f'{current_year}-8514', (current_year, 8514), f'{current_year}-8515'),
-    (f'{current_year}-0001', (current_year, 1), f'{current_year}-0002'),
-    (f'{current_year}-0023', (current_year, 23), f'{current_year}-0024'),
-]
+record_invoice(open('invoices.csv', 'r+', encoding='utf-8', newline=''), 'Acme', 100.0)
+record_invoice(open('invoices.csv', 'r+', encoding='utf-8', newline=''), 'Test', 10.40)
+# current_year = get_year()
+# test_data = [
+#     ('2019-0005', (2019, 5), f'{current_year}-0001'),
+#     (f'{current_year}-8514', (current_year, 8514), f'{current_year}-8515'),
+#     (f'{current_year}-0001', (current_year, 1), f'{current_year}-0002'),
+#     (f'{current_year}-0023', (current_year, 23), f'{current_year}-0024'),
+# ]
 
-for test_string, result, next_number in test_data:
-    parts = parse_invoice_number(test_string)
-    if parts == result:
-        print(f'{test_string} parsed successfully')
-    else:
-        print(f'{test_string} failed to parse. Expected {result} got {parts}')
+# for test_string, result, next_number in test_data:
+#     parts = parse_invoice_number(test_string)
+#     if parts == result:
+#         print(f'{test_string} parsed successfully')
+#     else:
+#         print(f'{test_string} failed to parse. Expected {result} got {parts}')
 
-    new_number = next_invoice_number(test_string)
-    if next_number == new_number:
-        print(f'New number {new_number} generated correctly for {test_string}')
-    else:
-        print(f'New number {new_number} is not correct for {test_string}')
+#     new_number = next_invoice_number(test_string)
+#     if next_number == new_number:
+#         print(f'New number {new_number} generated correctly for {test_string}')
+#     else:
+#         print(f'New number {new_number} is not correct for {test_string}')
 
-    print('-' * 80)
+#     print('-' * 80)
 
