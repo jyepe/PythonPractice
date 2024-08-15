@@ -1,0 +1,6 @@
+equation = bytes((207, 128, 114, 194, 178))
+print(equation)
+print(equation[0])
+print(type(equation))
+print(len(equation))
+print(equation.decode('utf-8'))
